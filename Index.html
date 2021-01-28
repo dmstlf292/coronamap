@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>다음 지도 API</title>
+</head>
+<body>
+	<div id="map" style="width:100%;height:100vh;"></div>
+
+	<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=6364d2fc29c7e183296b697c7793d59d&libraries=clusterer"></script>
+	<script>
+		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+		    mapOption = {
+		        center: new kakao.maps.LatLng(35.160716014474126, 129.0600831506222), // 지도의 중심좌표
+		        level: 4, // 지도의 확대 레벨
+		        mapTypeId : kakao.maps.MapTypeId.ROADMAP // 지도종류
+		    }; 
+
+		// 지도를 생성한다 
+        var map = new kakao.maps.Map(mapContainer, mapOption); 
+        // (여기 추가하기) 마커 클러스터러를 생성합니다 
+        var clusterer = new kakao.maps.MarkerClusterer({
+                map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
+                averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
+                minLevel: 10 // 클러스터 할 최소 지도 레벨 
+            });
+        var 데이터 =[
+                [35.19944839162989, 129.06653998269482, '<div style="padding: 5px">부산-2703</div>'], 
+                [35.08747978001838, 129.0463333557083, '<div style="padding: 5px">부산-2702</div>'], 
+                [35.23298338606098, 129.08885043851606, '<div style="padding: 5px">부산-2701</div>'], 
+                [35.05878618962156, 128.96866411152814, '<div style="padding: 5px">부산-2700</div>'], 
+                [35.05875106069674, 128.9687284845436, '<div style="padding: 5px">부산-2699</div>'], 
+                [35.10528217054389, 129.03566504036502, '<div style="padding: 5px">부산-2698</div>'], 
+                [35.21213262319845, 129.02406509618754, '<div style="padding: 5px">부산-2697</div>'], 
+                [35.0678698617687, 129.00904686919995, '<div style="padding: 5px">부산-2696</div>'], 
+                [35.14184082633638, 129.06052073851436, '<div style="padding: 5px">부산-2695</div>'], 
+                [35.13543897804097, 129.08854815570913, '<div style="padding: 5px">부산-2694</div>'],
+            ];
+
+        var markers= [];
+        for (var i = 0; i < 데이터. length; i++) {
+
+            //지도에 마커를 생성하고 표시한다.
+            var marker = new kakao.maps.Marker({
+                    position: new kakao.maps.LatLng(데이터 [i] [0], 데이터 [i] [1],데이터 [i] [2],데이터 [i] [3],데이터 [i] [4],데이터 [i] [5],데이터 [i] [6],데이터 [i] [7],데이터 [i] [8],데이터 [i] [9]),//
+                    map: map //마커를 표시할 지도 객체
+                });
+            // 인포윈도우를 생성합니다
+            var infowindow = new kakao.maps.InfoWindow({
+                    content : 데이터[i] [10]
+                });
+
+            
+            markers.push(marker);
+            kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+            kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+        }
+
+        //클러스터러에 마커들을 추가합니다.
+        clusterer.addMarkers(markers);
+        // 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
+        function makeOverListener(map, marker, infowindow) {
+            return function() {
+                infowindow.open(map, marker);
+            };
+        }
+
+        // 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+        function makeOutListener(infowindow) {
+            return function() {
+                infowindow.close();
+            };
+        }
+      
+</script>
+</body>
+</html>
